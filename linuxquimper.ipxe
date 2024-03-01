@@ -1,0 +1,37 @@
+#!ipxe
+
+goto ${menu} ||
+
+:live_menu
+set os_arch ${arch}
+iseq ${os_arch} x86_64 && set os_arch amd64 ||
+iseq ${os_arch} i386 && set os_arch i686 ||
+set os Clonezilla
+menu ${os}
+item --gap ${os} Versions
+iseq ${os_arch} i686 && item /debian-squash/releases/download/3.1.2-9-d9f6cb5e/ ${space} Clonezilla 3.1.1-27 Stable avec Debian ||
+iseq ${os_arch} amd64 && item /debian-squash/releases/download/3.1.2-9-80072992/ ${space} Clonezilla 3.1.1-27 Stable avec Debian ||
+
+choose path || goto live_menu
+goto danger
+
+:danger
+menu Clonage par LinuxQuimper
+item --gap CE LOGICIEL DÉTRUIT LES DONNEES
+item --gap LE DISQUE DURE SERA FORMATE
+item --gap NE PAS EFECTUE SI VOUS NE SAVEZ PAS CE QUE C EST
+item live_exit ${space} Retour
+item clonezilla-boot-client ${space} Continuez, je sais ce que je fais
+choose menu || goto dban_exit
+goto ${menu}
+
+:clonezilla-boot-client
+imgfree
+set url ${live_endpoint}${path}
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+initrd ${url}initrd
+boot
+
+:live_exit
+clear menu
+exit 0
