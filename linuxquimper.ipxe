@@ -39,6 +39,12 @@ kernel ${url}vmlinuz boot=live username=user union=overlay config quiet componen
 initrd ${url}initrd
 boot
 
+:clonezilla-boot-efi
+imgfree
+set url ${live_endpoint}${path}
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+initrd ${url}initrd
+boot
 
 :shredos_boot
 imgfree
