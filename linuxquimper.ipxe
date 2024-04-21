@@ -6,7 +6,7 @@ set os_arch ${arch}
 iseq ${os_arch} x86_64 && set os_arch amd64 ||
 iseq ${os_arch} i386 && set os_arch i686 ||
 menu Clonenage Par linuxquimper
-item --gap -------- choisir le logiciel ------
+item --gap choisir le logiciel
 item --gap  Clonezilla Versions Stable
 iseq ${os_arch} amd64 && item clonezilla ${space} Clonage auto pour pc ||
 item --gap Shredos
@@ -49,7 +49,7 @@ goto ${menu}
 :amd64-clonezilla-boot-efi
 imgfree
 set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
-kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-UEFI-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ip=eth0:10.0.0.11:255.255.255.0:10.0.0.1:10.0.0.1 ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-UEFI-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
 boot
 
@@ -71,7 +71,7 @@ boot
 :amd64-clonezilla-original-efi
 imgfree
 set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
-kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-UEFI-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -q2 -c -j2 -nogui -z9 -i 0 -sfsck -scs -senc -p poweroff savedisk 2024-04-21-15-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
 boot
 
