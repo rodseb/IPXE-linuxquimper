@@ -10,77 +10,80 @@ item --gap choisir le logiciel
 item --gap  Clonezilla Versions Stable
 iseq ${os_arch} amd64 && item clonezilla ${space} Clonage auto pour pc ||
 item --gap Shredos
-iseq ${platform} efi && item shredos ${space} ShredOS AUTO  ||
+item shredos ${space} ShredOS AUTO  ||
 item --gap EN DEVELOPEMENT PEUX ETRE PAS FONCTIONNEL
-iseq ${os_arch} amd64 && item clonezzilla-original ${space} Clonage auto pour l original ||
+iseq ${os_arch} amd64 && item clonezzilla-original ${space} Clonage auto pour l'original ||
 choose menu || goto live_exit
 goto ${menu}
 
 :clonezilla
-menu Clonage par LinuxQuimper avec Shredos
+menu Clonage par LinuxQuimper avec Clonezilla
 item --gap CE LOGICIEL DÉTRUIT LES DONNEES
 item --gap LE DISQUE DURE SERA FORMATE
 item --gap NE PAS EFECTUE SI VOUS NE SAVEZ PAS CE QUE C EST
 item live_menu ${space} Retour ||
-item ${os_arch}-clonezilla-boot-${platform} ${space} Clonezilla !!!Continuez, je sais ce que je fais !!!${platform} ||
+item ${os_arch}-clonezilla-boot-${platform} ${space} Clonezilla !!! Continuez, je sais ce que je fais !!! ||
 choose menu || goto live_menu
 goto ${menu}
 
 :shredos
-menu Formatage  par LinuxQuimper avec Clonezilla
+menu Formatage  par LinuxQuimper avec shredos
 item --gap CE LOGICIEL DÉTRUIT LES DONNEES 
 item --gap LE DISQUE DURE SERA FORMATE
 item --gap NE PAS EFECTUE SI VOUS NE SAVEZ PAS CE QUE C EST
 item live_menu ${space} Retour
-item shredos_boot ${space} ShredOS !!Continuez, je sais ce que je fais !!||
+item shredos_boot ${space} ShredOS !! Continuez, je sais ce que je fais !!||
 choose menu || goto live_menu
 goto ${menu}
 
 :clonezzilla-original
-menu Clonage par LinuxQuimper avec Shredos
-item --gap CE LOGICIEL DÉTRUIT LES DONNEES
-item --gap LE DISQUE DURE SERA FORMATE
-item --gap NE PAS EFECTUE SI VOUS NE SAVEZ PAS CE QUE C EST
+menu Clonage de l'original de LinuxQuimper avec Clonezilla
+item --gap ATTENTION CECI VA ECRASé le depo deja existant
 item live_menu ${space} Retour ||
-item ${os_arch}-clonezilla-original-${platform} ${space} !!!Continuez, je sais ce que je fais !!! ||
+iseq ${ip} 10.0.0.10 && item ${os_arch}-clonezilla-original-${platform} ${space} !!! Continuez, je sais ce que je fais 1 !!! ||
+iseq ${ip} 10.0.0.11 && item ${os_arch}-clonezilla-original-${platform} ${space} !!! Continuez, je sais ce que je fais 2 !!! ||
 choose menu || goto live_menu
 goto ${menu}
 
 :amd64-clonezilla-boot-efi
 imgfree
-set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
+set url ${live_endpoint}/debian-squash/releases/download/3.1.2-22-5641363c/
 kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ip=eth0:10.0.0.11:255.255.255.0:10.0.0.1:10.0.0.1 ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-UEFI-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
 boot
 
 :amd64-clonezilla-boot-pcbios
 imgfree
-set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
+set url ${live_endpoint}/debian-squash/releases/download/3.1.2-22-5641363c/
 kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-BIOS-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
 boot
 
+## Shredos
+
 :shredos_boot
 imgfree
-set url ${live_endpoint}/asset-mirror/releases/download/0.34_32-bit_20221231-3adcc4d0/shredos
+set url ${live_endpoint}/asset-mirror/releases/download/2023.08.2_25.0_x86-64_0.35-91d6cdbd/shredos
 kernel ${url} console=tty3 loglevel=3 nwipe_options="--method=dodshort --verif=off --round=1 --autopoweroff" ${cmdline}
 boot
 
 # Clonnage de l'original
 
+## EFI
 :amd64-clonezilla-original-efi
 imgfree
-set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
-kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -q2 -c -j2 -nogui -z9 -i 0 -sfsck -scs -senc -p poweroff savedisk 2024-04-21-15-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+set url ${live_endpoint}/debian-squash/releases/download/3.1.2-22-5641363c/
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -q2 -c -j2 -nogui -z9 -i 0 -sfsck -scs -senc -p poweroff savedisk Debian-12-Gnome-Abeilles-UEFI-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
 boot
 
+## BIOS
 :amd64-clonezilla-original-pcbios
 imgfree
-set url ${live_endpoint}/debian-squash/releases/download/3.1.2-9-5641363c/
-kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -g auto -e1 auto -e2  -r -j2 -k1 -scr -icds -p reboot restoredisk Debian-12-Gnome-Abeilles-BIOS-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
+set url ${live_endpoint}/debian-squash/releases/download/3.1.2-22-5641363c/
+kernel ${url}vmlinuz boot=live username=user union=overlay config quiet components noswap edd=on nomodeset ocs_live_run="/usr/sbin/ocs-sr -q2 -c -j2 -nogui -z9 -i 0 -sfsck -scs -senc -p poweroff savedisk Debian-12-Gnome-Abeilles-BIOS-Xorg-img sda" ocs_repository="nfs4://10.0.0.3/opt/clonezilla" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt locales="fr_FR.UTF-8" keyboard-layouts=fr fetch=${url}filesystem.squashfs initrd=initrd.magic ${cmdline}
 initrd ${url}initrd
-boot
+booty
 
 :live_exit
 clear menu
